@@ -1,0 +1,3 @@
+  PID TTY           TIME CMD
+11964 ttys001    0:00.01 /bin/bash ./system_info.sh sh
+65879 ttys001    0:00.35 /bin/zsh -il
