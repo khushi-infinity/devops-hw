@@ -1,4 +1,7 @@
-# Terraform S3 Bucket Demo
+# Session 18: Terraform and Infrastructure as Code
+
+This project creates an AWS S3 bucket with Terraform and documents the
+complete Terraform workflow.
 
 ## Project Structure
 
@@ -6,10 +9,9 @@
 terraform-s3-demo/
 |
 |-- README.md
-|-- terraform.tf
 |-- providers.tf
 |-- variables.tf
-|-- terraform.tfvars
+|-- terraform.tfvars (optional; defaults are defined in variables.tf)
 |-- main.tf
 |-- outputs.tf
 |-- .gitignore
@@ -18,7 +20,7 @@ terraform-s3-demo/
 ## Architecture
 
 ```text
-terraform.tf
+providers.tf
      |
      v
 Provider Configuration
@@ -27,13 +29,13 @@ Provider Configuration
 variables.tf
      |
      v
-terraform.tfvars
+terraform.tfvars (optional)
      |
      v
 main.tf
      |
      v
-aws_s3_bucket.demo
+aws_s3_bucket.yatri12348
      |
      v
 AWS S3 Bucket
@@ -44,10 +46,8 @@ outputs.tf
 
 ## Prerequisites
 
-Install:
-
-* Terraform
-* AWS CLI
+Install Terraform, the AWS CLI, and an AWS account with permission to create
+and delete S3 buckets.
 
 Configure AWS:
 
@@ -59,6 +59,14 @@ Verify:
 
 ```bash
 aws sts get-caller-identity
+```
+
+The bucket name must be globally unique. Set a unique name in
+`terraform.tfvars` if the default name is already in use:
+
+```hcl
+aws_region  = "ap-south-1"
+bucket_name = "your-unique-bucket-name"
 ```
 
 ## Terraform Workflow
@@ -81,6 +89,8 @@ Terraform has been successfully initialized!
 ```bash
 terraform fmt
 ```
+
+`terraform fmt` formats all Terraform files in the project.
 
 ### 3. Validate
 
@@ -131,8 +141,8 @@ Expected:
 ```text
 Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
 Outputs:
-bucket_arn = "arn:aws:s3:::demo"
-bucket_name = "demo"
+bucket_arn = "arn:aws:s3:::your-unique-bucket-name"
+bucket_name = "your-unique-bucket-name"
 bucket_region = "ap-south-1"
 ```
 
@@ -145,13 +155,13 @@ terraform state list
 Expected:
 
 ```text
-aws_s3_bucket.demo
+aws_s3_bucket.yatri12348
 ```
 
 Inspect the resource:
 
 ```bash
-terraform state show aws_s3_bucket.demo
+terraform state show aws_s3_bucket.yatri12348
 ```
 
 ### 7. Check Output
@@ -169,7 +179,7 @@ terraform output bucket_name
 Expected:
 
 ```text
-"demo"
+"your-unique-bucket-name"
 ```
 
 ### 8. Verify Using AWS CLI
@@ -181,7 +191,7 @@ aws s3 ls
 Or:
 
 ```bash
-aws s3api head-bucket --bucket demo
+aws s3api head-bucket --bucket <bucket-name>
 ```
 
 ### 9. Destroy
@@ -210,6 +220,66 @@ Expected:
 Destroy complete! Resources: 1 destroyed.
 ```
 
+## Screenshot evidence
+
+The screenshots below are the captured outputs from the completed Terraform
+S3 workflow. They are stored in the project's `../assets/` directory.
+
+### 1. Terraform initialization, formatting, and validation
+
+Commands shown:
+
+```bash
+terraform init
+terraform fmt
+terraform validate
+```
+
+![Terraform initialization, formatting, and validation output](../assets/terraformdemo.png)
+
+### 2. Terraform plan and apply
+
+Commands shown:
+
+```bash
+terraform plan
+terraform apply
+```
+
+![Terraform plan and apply output](../assets/terraformdemo2.png)
+
+### 3. Terraform output values
+
+Command shown:
+
+```bash
+terraform output
+```
+
+![Terraform output values](../assets/terraformdemo3.png)
+
+### 4. Terraform state and resource details
+
+Commands shown:
+
+```bash
+terraform show
+terraform state list
+terraform state show aws_s3_bucket.yatri12348
+```
+
+![Terraform state and resource details](../assets/terraformdemo4.png)
+
+### 5. Terraform destroy
+
+Command shown:
+
+```bash
+terraform destroy
+```
+
+![Terraform destroy output](../assets/terraformdemo5.png)
+
 ## Complete Demo
 
 Run:
@@ -223,7 +293,7 @@ terraform plan
 terraform apply
 terraform output
 terraform state list
-terraform state show aws_s3_bucket.demo
+terraform state show aws_s3_bucket.yatri12348
 terraform plan -destroy
 terraform destroy
 ```
